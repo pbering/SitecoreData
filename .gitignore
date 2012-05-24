@@ -65,7 +65,10 @@ local.properties
 .builds
 **/*.dotCover
 
+# SitecoreData
 **/lib/Sitecore/
+
+# NuGet package restore is enabled
 **/packages/ 
 
 # Visual C++ cache files
