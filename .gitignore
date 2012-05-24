@@ -34,7 +34,7 @@
 **/*.dotCover
 
 # SitecoreData
-**/lib/
+lib/
 
 # NuGet package restore is enabled
 **/packages/ 
