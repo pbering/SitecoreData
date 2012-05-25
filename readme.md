@@ -8,6 +8,10 @@ Experiments with [Sitecore](http://www.sitecore.net) running on [RavenDB](http:/
 * "Event Sourcing" stylede data providers for (basically all CRUD operations is only inserts which enables some 
 interesting data replication benefits).
 
+## Performance ##
+
+See /doc/Measurements.xlsx for current performance data
+
 ## Notes ##
 
 Inspiration for the MongoDB implementation came from this blog post: (http://hermanussen.eu/sitecore/wordpress/2012/05/making-sitecore-faster-with-mongodb/), big thanks 
