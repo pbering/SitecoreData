@@ -10,7 +10,7 @@ interesting data replication benefits).
 
 ## Performance ##
 
-See /doc/Measurements.xlsx for current performance data
+See [/doc/Measurements.xlsx](https://github.com/pbering/SitecoreData/blob/master/doc/Measurements.xlsx) for current performance data
 
 ## Notes ##
 
