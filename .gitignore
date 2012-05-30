@@ -32,12 +32,13 @@
 *.vspscc
 .builds
 **/*.dotCover
+*.dotCover
 
 # SitecoreData
 lib/
 
 # NuGet package restore is enabled
-**/packages/ 
+packages/
 
 # Visual C++ cache files
 ipch/

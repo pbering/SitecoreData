@@ -19,7 +19,7 @@ to Robin Hermanussen for getting me started at trying out MongoDB!
 
 ## Installation ##
 
-Clone, build, configure and run /Transfer*.aspx... for now, NuGet packages will come at some point! 
+Clone, build (place Sitecore.Kernel.dll in \lib\Sitecore\), configure and run /Transfer*.aspx... for now, NuGet packages will come at some point! 
 
 ## Contributing ##
 
