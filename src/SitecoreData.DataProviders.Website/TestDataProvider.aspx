@@ -20,21 +20,12 @@
 <%@ Import Namespace="Sitecore.Caching" %>
 <%@ Import Namespace="Sitecore.Configuration" %>
 <%@ Import Namespace="Sitecore.Data" %>
+<%@ Import Namespace="Sitecore.Data.DataProviders" %>
 <%@ Import Namespace="Sitecore.Data.Fields" %>
 <%@ Import Namespace="Sitecore.Data.Items" %>
-<%@ Import Namespace="Sitecore.Data.Managers" %>
 <%@ Import Namespace="Sitecore.SecurityModel" %>
-<%@ Import Namespace="Sitecore.Shell.Web" %>
-<%@ Import Namespace="Sitecore.Data.DataProviders" %>
-<% ShellPage.IsLoggedIn();%>
-<%
-   if (! Sitecore.Context.User.IsInRole(@"sitecore\Developer")
-       && ! Sitecore.Context.IsAdministrator)
-   {
-       Response.Write("<p>You are not authorized to use this page</p>");
-       Response.End();
-   }
-%>
+<%@ Import Namespace="Sitecore.Data.Managers" %>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -47,14 +38,15 @@
 
             protected override void OnLoad(EventArgs e)
             {
-                base.OnLoad(e);
-                if (! IsPostBack)
+                if (!IsPostBack)
                 {
                     var dataProviders = new List<DataProvider>();
+                    
                     foreach (var databaseName in Factory.GetDatabaseNames())
                     {
                         dataProviders.AddRange(Factory.GetDatabase(databaseName).GetDataProviders());
                     }
+                    
                     rptDataProviders.DataSource = dataProviders;
                     rptDataProviders.DataBind();
                 }

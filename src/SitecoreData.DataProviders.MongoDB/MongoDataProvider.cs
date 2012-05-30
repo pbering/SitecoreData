@@ -12,19 +12,13 @@ namespace SitecoreData.DataProviders.MongoDB
     {
         public MongoDataProvider(string connectionString) : base(connectionString)
         {
-            // TODO: Figure out parameters for connectionstring
-
-            // TODO: SubClass Item*Dto to decorate with BSON attributes
+            // TODO: SubClass Item*Dto to decorate with BSON attributes?
             SafeMode = SafeMode.True;
-
             JoinParentId = ID.Null;
+            
+            var databaseName = MongoUrl.Create(connectionString).DatabaseName;
 
-            const string conn = "mongodb://localhost:27017/web";
-
-            var databaseName = MongoUrl.Create(conn).DatabaseName;
-
-            Server = MongoServer.Create(conn);
-
+            Server = MongoServer.Create(connectionString);
             Db = Server.GetDatabase(databaseName);
 
             Items = Db.GetCollection<ItemDto>("items", SafeMode);

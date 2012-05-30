@@ -22,11 +22,11 @@ namespace SitecoreData.DataProviders
         private Cache _prefetchCache;
         private DataProviderBase _provider;
 
-        public DataProviderWrapper(string connectionString, string implementationType)
+        public DataProviderWrapper(string connectionStringName, string implementationType)
         {
-            if (string.IsNullOrEmpty(connectionString))
+            if (string.IsNullOrEmpty(connectionStringName))
             {
-                throw new ArgumentException("Can not be null or empty", "connectionString");
+                throw new ArgumentException("Can not be null or empty", "connectionStringName");
             }
 
             if (string.IsNullOrEmpty(implementationType))
@@ -34,7 +34,7 @@ namespace SitecoreData.DataProviders
                 throw new ArgumentException("Can not be null or empty", "implementationType");
             }
 
-            ConnectionString = connectionString;
+            ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings[connectionStringName].ConnectionString;
             ImplementationType = implementationType;
 
             EnsureNotEmpty();
