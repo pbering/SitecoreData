@@ -21,11 +21,11 @@ This is tested with Sitecore 6.4.1 rev. 110324 and Sitecore 6.5.0 rev. 120427.
 
 ## Installation ##
 
-# Clone
-# Place Sitecore.Kernel.dll in \lib\Sitecore\
-# Build
-# Deploy
-# Run /Transfer.aspx
+* Clone
+* Place Sitecore.Kernel.dll in \lib\Sitecore\
+* Configure and build
+* Deploy
+* Run /Transfer.aspx
 
 ... for now
 
