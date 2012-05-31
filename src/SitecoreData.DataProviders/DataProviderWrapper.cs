@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using Sitecore;
 using Sitecore.Caching;
@@ -34,7 +35,7 @@ namespace SitecoreData.DataProviders
                 throw new ArgumentException("Can not be null or empty", "implementationType");
             }
 
-            ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings[connectionStringName].ConnectionString;
+            ConnectionString = ConfigurationManager.ConnectionStrings[connectionStringName].ConnectionString;
             ImplementationType = implementationType;
 
             EnsureNotEmpty();
@@ -268,7 +269,18 @@ namespace SitecoreData.DataProviders
 
             var provider = Provider.WritableProvider;
 
-            provider.CreateItem(itemId.ToGuid(), itemName, templateId.ToGuid(), parent.ID.ToGuid());
+            Guid parentId;
+
+            if (parent == null)
+            {
+                parentId = Guid.Empty;
+            }
+            else
+            {
+                parentId = parent.ID.ToGuid();
+            }
+
+            provider.CreateItem(itemId.ToGuid(), itemName, templateId.ToGuid(), parentId);
 
             return true;
         }

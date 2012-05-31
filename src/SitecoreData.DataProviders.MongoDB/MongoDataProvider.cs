@@ -22,8 +22,8 @@ namespace SitecoreData.DataProviders.MongoDB
             Db = Server.GetDatabase(databaseName);
 
             Items = Db.GetCollection<ItemDto>("items", SafeMode);
-            Items.EnsureIndex(IndexKeys.Ascending(new[] {"ParentID"}));
-            Items.EnsureIndex(IndexKeys.Ascending(new[] {"TemplateID"}));
+            Items.EnsureIndex(IndexKeys.Ascending(new[] {"ParentId"}));
+            Items.EnsureIndex(IndexKeys.Ascending(new[] {"TemplateId"}));
         }
 
         private ID JoinParentId { get; set; }
@@ -81,7 +81,7 @@ namespace SitecoreData.DataProviders.MongoDB
 
         public override IEnumerable<Guid> GetChildIds(Guid parentId)
         {
-            var query = Query.EQ("ParentID",
+            var query = Query.EQ("ParentId",
                                  parentId == JoinParentId.ToGuid()
                                      ? Guid.Empty
                                      : parentId);
@@ -98,7 +98,7 @@ namespace SitecoreData.DataProviders.MongoDB
 
         public override IEnumerable<Guid> GetTemplateIds(Guid templateId)
         {
-            var query = Query.EQ("TemplateID", TemplateIDs.Template.ToGuid());
+            var query = Query.EQ("TemplateId", TemplateIDs.Template.ToGuid());
             var ids = new List<Guid>();
 
             foreach (var id in Items.FindAs<ItemDto>(query).Select(it => it.Id))

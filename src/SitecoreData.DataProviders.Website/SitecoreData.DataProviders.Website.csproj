@@ -82,9 +82,8 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TransferMongo.aspx" />
+    <Content Include="Transfer.aspx" />
     <Content Include="TestDataProvider.aspx" />
-    <Content Include="TransferRaven.aspx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

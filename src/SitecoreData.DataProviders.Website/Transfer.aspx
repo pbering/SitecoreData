@@ -9,36 +9,37 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>Transfer items from a different database to the raven database</title>
+        <title>Transfer items between databases</title>
     </head>
     <body>
         <script runat="server">
 
             protected override void OnLoad(EventArgs e)
             {
-                base.OnLoad(e);
-
                 if (!IsPostBack)
                 {
-                    ddlDatabase.DataSource = new object[] {"- select database -"}.Concat(Factory.GetDatabaseNames());
-                    ddlDatabase.DataBind();
+                    ddlSourceDatabase.DataSource = new object[] {"select source"}.Concat(Factory.GetDatabaseNames());
+                    ddlSourceDatabase.DataBind();
+
+                    ddlTargetDatabase.DataSource = new object[] {"select target"}.Concat(Factory.GetDatabaseNames());
+                    ddlTargetDatabase.DataBind();
                 }
             }
 
-            public void DatabaseSelected(object sender, EventArgs e)
+            private void OnStartButtonClick(object sender, EventArgs e)
             {
-                if (!"- select database -".Equals(ddlDatabase.SelectedValue))
+                if (!"select source".Equals(ddlSourceDatabase.SelectedValue) && !"select target".Equals(ddlTargetDatabase.SelectedValue))
                 {
-                    var database = Factory.GetDatabase(ddlDatabase.SelectedValue);
-                    var raven = Factory.GetDatabase("nosqlraven");
+                    var sourceDatabase = Factory.GetDatabase(ddlSourceDatabase.SelectedValue);
+                    var targetDatabase = Factory.GetDatabase(ddlTargetDatabase.SelectedValue);
 
-                    if (database != null && raven != null)
+                    if (sourceDatabase != null && targetDatabase != null)
                     {
                         using (new SecurityDisabler())
                         {
-                            var item = database.GetRootItem();
+                            var item = sourceDatabase.GetRootItem();
 
-                            var dataProvider = raven.GetDataProviders().First() as DataProviderWrapper;
+                            var dataProvider = targetDatabase.GetDataProviders().First() as DataProviderWrapper;
 
                             Response.Write("<ul>");
                             Response.Flush();
@@ -99,17 +100,17 @@
                 {
                     return;
                 }
+
                 foreach (Item child in item.Children)
                 {
                     TransferRecursive(child, provider);
                 }
             }
 
-        </script>
+</script>
         <form runat="server">
             <p>
-                Transfer items from this database (starts immediately):
-                <asp:DropDownList runat="server" ID="ddlDatabase" AutoPostBack="true" OnSelectedIndexChanged="DatabaseSelected" />
+                Transfer items from  <asp:DropDownList runat="server" ID="ddlSourceDatabase" /> to <asp:DropDownList runat="server" ID="ddlTargetDatabase"  /> <asp:Button runat="server" ID="btnStart" OnClick="OnStartButtonClick" Text="Start" />
             </p>
         </form>
     </body>
