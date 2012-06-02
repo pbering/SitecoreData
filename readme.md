@@ -23,11 +23,9 @@ This is tested with Sitecore 6.4.1 rev. 110324 and Sitecore 6.5.0 rev. 120427.
 
 * Clone
 * Place Sitecore.Kernel.dll in \lib\Sitecore\
-* Configure and build
-* Deploy
+* Configure (connection strings, data folder etc. setup IIS website with clean Sitecore installation) and build
+* Deploy (Use build configuration "Debug with Publish" and a deploycommand.xml pointing to above IIS website)
 * Run /Transfer.aspx
-
-... for now
 
 ## Contributing ##
 
