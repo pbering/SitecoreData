@@ -45,6 +45,20 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug with Publish|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>bin\SitecoreData.DataProviders.Website.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=4.0.8.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -69,9 +83,6 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
-    <Reference Include="Telerik.Web.UI">
-      <HintPath>..\..\packages\Sitecore\Telerik.Web.UI.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -130,4 +141,44 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Target Name="AfterBuild" Condition=" '$(Configuration)' == 'Debug with Publish'">
+    <PropertyGroup>
+      <DeployCommandFile>..\..\deploycommand.xml</DeployCommandFile>
+    </PropertyGroup>
+
+    <Message Condition=" !Exists( '$(DeployCommandFile)' ) " Importance="high" Text="Deploy command file not found, skipping deployment" />
+    <Message Condition=" Exists( '$(DeployCommandFile)' ) " Importance="high" Text="Using deploy command file $(DeployCommandFile)" />
+
+    <MSBuild Condition=" Exists( '$(DeployCommandFile)' ) " Projects="$(MSBuildProjectFullPath)" Targets="DeployWebApplication" StopOnFirstFailure="true" Properties="
+      DeployCommandFile=$(DeployCommandFile)" />
+  </Target>
+  
+  <Target Name="DeployWebApplication">   
+    <XmlPeek XmlInputPath="$(DeployCommandFile)" Query="/deploy/to/text()">
+      <Output TaskParameter="Result" ItemName="To" />
+    </XmlPeek>
+
+    <PropertyGroup>
+      <DeployDirectory>@(To)</DeployDirectory>
+    </PropertyGroup>
+
+    <Error Condition=" '$(DeployDirectory)' == '' " Text="Empty 'to' element found in $(DeployCommandFile)" />
+    <Error Condition=" !Exists(' $(DeployDirectory)' ) " Text="Deployment directory $(DeployDirectory) does not exist!" />
+    
+    <Message Importance="high" Text=" Deployment directory is $(DeployDirectory)" />
+    <Message Importance="high" Text=" Copying web application files..." />
+
+    <MSBuild Projects="$(MSBuildProjectFullPath)"
+             Properties="WebProjectOutputDir=$(DeployDirectory);OutDir=$(DeployDirectory)\bin\"
+             Targets="_CopyWebApplication" />
+
+    <ItemGroup>
+      <Assemblies Include="bin\**\*" />
+    </ItemGroup>
+
+    <Message Importance="high" Text=" Copying assemblies..." />
+    <Copy SourceFiles="@(Assemblies)" DestinationFiles="@( Assemblies -> '$(DeployDirectory)\bin\%(RecursiveDir)%(Filename)%(Extension)' )" OverwriteReadOnlyFiles="True" SkipUnchangedFiles="True" />
+
+    <Message Importance="high" Text="Deployment completed!" />    
+  </Target>
 </Project>

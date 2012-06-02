@@ -35,7 +35,8 @@
 *.dotCover
 
 # SitecoreData
-lib/
+lib/Sitecore/*.*
+deploycommand.xml
 
 # NuGet package restore is enabled
 packages/
