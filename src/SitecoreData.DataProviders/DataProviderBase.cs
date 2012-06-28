@@ -34,5 +34,8 @@ namespace SitecoreData.DataProviders
         public abstract IEnumerable<Guid> GetChildIds(Guid parentId);
 
         public abstract IEnumerable<Guid> GetTemplateIds(Guid templateId);
+
+
+        public abstract IEnumerable<ItemDto> GetItemsInWorkflowState(Guid workflowStateId);
     }
 }

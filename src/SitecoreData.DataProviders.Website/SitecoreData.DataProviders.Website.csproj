@@ -66,7 +66,7 @@
     </Reference>
     <Reference Include="Sitecore.Kernel, Version=6.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Sitecore\Sitecore.Kernel.dll</HintPath>
+      <HintPath>..\..\depends\Sitecore.Kernel.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -145,40 +145,27 @@
     <PropertyGroup>
       <DeployCommandFile>..\..\deploycommand.xml</DeployCommandFile>
     </PropertyGroup>
-
     <Message Condition=" !Exists( '$(DeployCommandFile)' ) " Importance="high" Text="Deploy command file not found, skipping deployment" />
     <Message Condition=" Exists( '$(DeployCommandFile)' ) " Importance="high" Text="Using deploy command file $(DeployCommandFile)" />
-
-    <MSBuild Condition=" Exists( '$(DeployCommandFile)' ) " Projects="$(MSBuildProjectFullPath)" Targets="DeployWebApplication" StopOnFirstFailure="true" Properties="
-      DeployCommandFile=$(DeployCommandFile)" />
+    <MSBuild Condition=" Exists( '$(DeployCommandFile)' ) " Projects="$(MSBuildProjectFullPath)" Targets="DeployWebApplication" StopOnFirstFailure="true" Properties="&#xD;&#xA;      DeployCommandFile=$(DeployCommandFile)" />
   </Target>
-  
-  <Target Name="DeployWebApplication">   
+  <Target Name="DeployWebApplication">
     <XmlPeek XmlInputPath="$(DeployCommandFile)" Query="/deploy/to/text()">
       <Output TaskParameter="Result" ItemName="To" />
     </XmlPeek>
-
     <PropertyGroup>
       <DeployDirectory>@(To)</DeployDirectory>
     </PropertyGroup>
-
     <Error Condition=" '$(DeployDirectory)' == '' " Text="Empty 'to' element found in $(DeployCommandFile)" />
     <Error Condition=" !Exists(' $(DeployDirectory)' ) " Text="Deployment directory $(DeployDirectory) does not exist!" />
-    
     <Message Importance="high" Text=" Deployment directory is $(DeployDirectory)" />
     <Message Importance="high" Text=" Copying web application files..." />
-
-    <MSBuild Projects="$(MSBuildProjectFullPath)"
-             Properties="WebProjectOutputDir=$(DeployDirectory);OutDir=$(DeployDirectory)\bin\"
-             Targets="_CopyWebApplication" />
-
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Properties="WebProjectOutputDir=$(DeployDirectory);OutDir=$(DeployDirectory)\bin\" Targets="_CopyWebApplication" />
     <ItemGroup>
       <Assemblies Include="bin\**\*" />
     </ItemGroup>
-
     <Message Importance="high" Text=" Copying assemblies..." />
     <Copy SourceFiles="@(Assemblies)" DestinationFiles="@( Assemblies -> '$(DeployDirectory)\bin\%(RecursiveDir)%(Filename)%(Extension)' )" OverwriteReadOnlyFiles="True" SkipUnchangedFiles="True" />
-
-    <Message Importance="high" Text="Deployment completed!" />    
+    <Message Importance="high" Text="Deployment completed!" />
   </Target>
 </Project>

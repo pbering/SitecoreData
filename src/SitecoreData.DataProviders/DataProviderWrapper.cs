@@ -39,6 +39,7 @@ namespace SitecoreData.DataProviders
             ImplementationType = implementationType;
 
             EnsureNotEmpty();
+
         }
 
         protected string ImplementationType { get; set; }
@@ -338,8 +339,21 @@ namespace SitecoreData.DataProviders
                                                             Value = change.Value
                                                         });
                         }
+
+
+                        if (change.FieldID == FieldIDs.WorkflowState)
+                        {
+                            Guid workflowStateId = Guid.Empty;
+                            Guid.TryParse(change.Value, out workflowStateId);
+
+                            current.WorkflowStateId = workflowStateId;
+                        }
                     }
+
+                   
                 }
+
+               
 
                 Provider.WritableProvider.Store(current);
             }
@@ -399,5 +413,25 @@ namespace SitecoreData.DataProviders
 
             return versionNumber;
         }
+
+        public override DataUri[] GetItemsInWorkflowState(Sitecore.Workflows.WorkflowInfo info, CallContext context)
+        {
+            Guid workflowStateId = Guid.Empty;
+            if(Guid.TryParse(info.StateID, out workflowStateId)){
+               var items = Provider.GetItemsInWorkflowState(workflowStateId);
+               var result = items.Select(
+                        x => x.FieldValues.Where(y => y.Id == FieldIDs.WorkflowState.Guid)
+                       .Select(y=> new DataUri(new ID(x.Id), LanguageManager.GetLanguage(y.Language), new Version( y.Version??1)))
+                       
+                       );
+                if(result.Any())
+                    return result.Aggregate((x,y)=> (x??new DataUri[]{}).Concat(y ?? new DataUri[]{})).ToArray();
+                else
+                    return new DataUri[] { };
+            }
+            else return new DataUri[]{};
+        }
+
+        
     }
 }
