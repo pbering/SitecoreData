@@ -5,7 +5,6 @@ using MongoDB.Driver;
 using MongoDB.Driver.Builders;
 using Sitecore;
 using Sitecore.Data;
-using Sitecore.Workflows;
 
 namespace SitecoreData.DataProviders.MongoDB
 {
@@ -13,10 +12,9 @@ namespace SitecoreData.DataProviders.MongoDB
     {
         public MongoDataProvider(string connectionString) : base(connectionString)
         {
-            // TODO: SubClass Item*Dto to decorate with BSON attributes?
             SafeMode = SafeMode.True;
             JoinParentId = ID.Null;
-            
+
             var databaseName = MongoUrl.Create(connectionString).DatabaseName;
 
             Server = MongoServer.Create(connectionString);
@@ -63,17 +61,6 @@ namespace SitecoreData.DataProviders.MongoDB
             return true;
         }
 
-        public override IEnumerable<ItemDto> GetItemsInWorkflowState(Guid workflowStateId){
-            //    SELECT F.{0}ItemId{1}, F.{0}Language{1}, F.{0}Version{1}\r\n FROM {0}Items{1} I, {0}VersionedFields{1} F\r\n
-            //    WHERE F.{0}ItemId{1} = I.{0}ID{1}\r\n AND F.{0}FieldId{1} = {2}fieldID{3}\r\n AND F.{0}Value{1} = {2}fieldValue{3}\r\n 
-            //    ORDER BY I.{0}Name{1}, F.{0}Language{1}, F.{0}Version{1}", (object) "fieldID", (object) FieldIDs.WorkflowState,
-            //    (object) "fieldValue", (object) info.StateID)
-
-            var query =    Query.EQ("WorkflowStateId", workflowStateId);
-            return Items.Find(query);
-                  
-        }
-
         public bool DeleteItem(Guid id)
         {
             var result = Items.Remove(Query.EQ("_id", id), RemoveFlags.Single, SafeMode);
@@ -84,6 +71,13 @@ namespace SitecoreData.DataProviders.MongoDB
         public void Store(ItemDto item)
         {
             Items.Save(item, SafeMode);
+        }
+
+        public override IEnumerable<ItemDto> GetItemsInWorkflowState(Guid workflowStateId)
+        {
+            var query = Query.EQ("WorkflowStateId", workflowStateId);
+            
+            return Items.Find(query);
         }
 
         public override ItemDto GetItem(Guid id)
@@ -104,7 +98,7 @@ namespace SitecoreData.DataProviders.MongoDB
         public override Guid GetParentId(Guid id)
         {
             var result = Items.FindOneByIdAs<ItemDto>(id);
-            
+
             return result != null ? (result.ParentId != Guid.Empty ? result.ParentId : JoinParentId.ToGuid()) : Guid.Empty;
         }
 
@@ -120,6 +114,5 @@ namespace SitecoreData.DataProviders.MongoDB
 
             return ids;
         }
-
     }
 }
