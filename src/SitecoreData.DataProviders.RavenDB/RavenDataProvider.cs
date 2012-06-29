@@ -163,5 +163,10 @@ namespace SitecoreData.DataProviders.RavenDB
                 }
             }
         }
+
+        public override IEnumerable<ItemDto> GetItemsInWorkflowState(Guid workflowStateId)
+        {
+            return new ItemDto[] { };
+        }
     }
 }
