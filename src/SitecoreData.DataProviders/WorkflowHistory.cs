@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace SitecoreData.DataProviders
 {
@@ -15,6 +12,5 @@ namespace SitecoreData.DataProviders
         public string Text { get; set; }
         public string User { get; set; }
         public DateTime Now { get; set; }
-            
     }
 }
