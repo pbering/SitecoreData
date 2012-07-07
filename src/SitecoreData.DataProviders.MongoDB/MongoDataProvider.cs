@@ -13,7 +13,6 @@ namespace SitecoreData.DataProviders.MongoDB
         public MongoDataProvider(string connectionString) : base(connectionString)
         {
             SafeMode = SafeMode.True;
-            JoinParentId = ID.Null;
 
             var databaseName = MongoUrl.Create(connectionString).DatabaseName;
 
@@ -24,8 +23,6 @@ namespace SitecoreData.DataProviders.MongoDB
             Items.EnsureIndex(IndexKeys.Ascending(new[] {"ParentId"}));
             Items.EnsureIndex(IndexKeys.Ascending(new[] {"TemplateId"}));
         }
-
-        private ID JoinParentId { get; set; }
 
         private MongoServer Server { get; set; }
 
@@ -76,7 +73,7 @@ namespace SitecoreData.DataProviders.MongoDB
         public override IEnumerable<ItemDto> GetItemsInWorkflowState(Guid workflowStateId)
         {
             var query = Query.EQ("WorkflowStateId", workflowStateId);
-            
+
             return Items.Find(query);
         }
 
@@ -88,7 +85,7 @@ namespace SitecoreData.DataProviders.MongoDB
         public override IEnumerable<Guid> GetChildIds(Guid parentId)
         {
             var query = Query.EQ("ParentId",
-                                 parentId == JoinParentId.ToGuid()
+                                 parentId == ID.Null.ToGuid()
                                      ? Guid.Empty
                                      : parentId);
 
@@ -99,7 +96,7 @@ namespace SitecoreData.DataProviders.MongoDB
         {
             var result = Items.FindOneByIdAs<ItemDto>(id);
 
-            return result != null ? (result.ParentId != Guid.Empty ? result.ParentId : JoinParentId.ToGuid()) : Guid.Empty;
+            return result != null ? (result.ParentId != Guid.Empty ? result.ParentId : ID.Null.ToGuid()) : Guid.Empty;
         }
 
         public override IEnumerable<Guid> GetTemplateIds(Guid templateId)

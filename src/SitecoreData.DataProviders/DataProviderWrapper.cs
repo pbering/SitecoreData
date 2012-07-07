@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using Sitecore;
 using Sitecore.Caching;
@@ -10,6 +11,8 @@ using Sitecore.Data;
 using Sitecore.Data.DataProviders;
 using Sitecore.Data.Items;
 using Sitecore.Data.Managers;
+using Sitecore.Data.Templates;
+using Sitecore.Eventing;
 using Sitecore.Globalization;
 using Sitecore.Reflection;
 using Sitecore.Workflows;
@@ -436,6 +439,167 @@ namespace SitecoreData.DataProviders
             }
 
             return new DataUri[] {};
+        }
+
+        public override IDList SelectIDs(string query, CallContext context)
+        {
+            // This is called by the Sitecore.Caching.AccessResultsCache add needs a empty list to get publishing to work
+            return new IDList();
+        }
+
+        public override bool AddToPublishQueue(ID itemID, string action, DateTime date, CallContext context)
+        {
+            return base.AddToPublishQueue(itemID, action, date, context);
+        }
+
+        public override bool BlobStreamExists(Guid blobId, CallContext context)
+        {
+            return base.BlobStreamExists(blobId, context);
+        }
+
+        public override bool ChangeFieldSharing(TemplateField fieldDefinition, TemplateFieldSharing sharing, CallContext context)
+        {
+            return base.ChangeFieldSharing(fieldDefinition, sharing, context);
+        }
+
+        public override bool ChangeTemplate(ItemDefinition itemDefinition, TemplateChangeList changes, CallContext context)
+        {
+            return base.ChangeTemplate(itemDefinition, changes, context);
+        }
+
+        public override bool CopyItem(ItemDefinition source, ItemDefinition destination, string copyName, ID copyID, CallContext context)
+        {
+            return base.CopyItem(source, destination, copyName, copyID, context);
+        }
+
+        public override bool CleanupPublishQueue(DateTime to, CallContext context)
+        {
+            return base.CleanupPublishQueue(to, context);
+        }
+
+        public override bool CleanupDatabase(CallContext context)
+        {
+            return base.CleanupDatabase(context);
+        }
+
+        public override Stream GetBlobStream(Guid blobId, CallContext context)
+        {
+            return base.GetBlobStream(blobId, context);
+        }
+
+        public override long GetDataSize(int minEntitySize, int maxEntitySize)
+        {
+            return base.GetDataSize(minEntitySize, maxEntitySize);
+        }
+
+        public override long GetDictionaryEntryCount()
+        {
+            return base.GetDictionaryEntryCount();
+        }
+
+        public override EventQueue GetEventQueue()
+        {
+            return base.GetEventQueue();
+        }
+
+        public override LanguageCollection GetLanguages(CallContext context)
+        {
+            return base.GetLanguages(context);
+        }
+
+        public override string GetProperty(string name, CallContext context)
+        {
+            return base.GetProperty(name, context);
+        }
+
+        public override List<string> GetPropertyKeys(string prefix, CallContext context)
+        {
+            return base.GetPropertyKeys(prefix, context);
+        }
+
+        public override IDList GetPublishQueue(DateTime from, DateTime to, CallContext context)
+        {
+            return base.GetPublishQueue(from, to, context);
+        }
+
+        public override ID GetRootID(CallContext context)
+        {
+            return base.GetRootID(context);
+        }
+
+        public override TemplateCollection GetTemplates(CallContext context)
+        {
+            return base.GetTemplates(context);
+        }
+
+        public override WorkflowInfo GetWorkflowInfo(ItemDefinition item, VersionUri version, CallContext context)
+        {
+            return base.GetWorkflowInfo(item, version, context);
+        }
+
+        public override bool HasChildren(ItemDefinition itemDefinition, CallContext context)
+        {
+            return base.HasChildren(itemDefinition, context);
+        }
+
+        public override bool MoveItem(ItemDefinition itemDefinition, ItemDefinition destination, CallContext context)
+        {
+            return base.MoveItem(itemDefinition, destination, context);
+        }
+
+        public override void RemoveLanguageData(Language language, CallContext context)
+        {
+            base.RemoveLanguageData(language, context);
+        }
+
+        public override bool RemoveProperty(string name, bool isPrefix, CallContext context)
+        {
+            return base.RemoveProperty(name, isPrefix, context);
+        }
+
+        public override bool RemoveVersion(ItemDefinition itemDefinition, VersionUri version, CallContext context)
+        {
+            return base.RemoveVersion(itemDefinition, version, context);
+        }
+
+        public override bool RemoveVersions(ItemDefinition itemDefinition, Language language, bool removeSharedData, CallContext context)
+        {
+            return base.RemoveVersions(itemDefinition, language, removeSharedData, context);
+        }
+
+        public override bool RemoveVersions(ItemDefinition itemDefinition, Language language, CallContext context)
+        {
+            return base.RemoveVersions(itemDefinition, language, context);
+        }
+
+        public override ID ResolvePath(string itemPath, CallContext context)
+        {
+            return base.ResolvePath(itemPath, context);
+        }
+
+        public override void RenameLanguageData(string fromLanguage, string toLanguage, CallContext context)
+        {
+            base.RenameLanguageData(fromLanguage, toLanguage, context);
+        }
+
+        public override ID SelectSingleID(string query, CallContext context)
+        {
+            return base.SelectSingleID(query, context);
+        }
+
+        public override bool SetBlobStream(Stream stream, Guid blobId, CallContext context)
+        {
+            return base.SetBlobStream(stream, blobId, context);
+        }
+
+        public override bool SetProperty(string name, string value, CallContext context)
+        {
+            return base.SetProperty(name, value, context);
+        }
+
+        public override bool SetWorkflowInfo(ItemDefinition item, VersionUri version, WorkflowInfo info, CallContext context)
+        {
+            return base.SetWorkflowInfo(item, version, info, context);
         }
     }
 }

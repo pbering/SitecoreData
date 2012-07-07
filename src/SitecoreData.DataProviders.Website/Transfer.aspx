@@ -1,8 +1,10 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" %>
 <%@ Import Namespace="Sitecore.Configuration" %>
 <%@ Import Namespace="Sitecore.Data" %>
+<%@ Import Namespace="Sitecore.Data.DataProviders" %>
 <%@ Import Namespace="Sitecore.Data.Fields" %>
 <%@ Import Namespace="Sitecore.Data.Items" %>
+<%@ Import Namespace="Sitecore.Data.SqlServer" %>
 <%@ Import Namespace="Sitecore.Globalization" %>
 <%@ Import Namespace="Sitecore.SecurityModel" %>
 <%@ Import Namespace="SitecoreData.DataProviders" %>
@@ -39,7 +41,7 @@
                         {
                             var item = sourceDatabase.GetRootItem();
 
-                            var dataProvider = targetDatabase.GetDataProviders().First() as DataProviderWrapper;
+                            var dataProvider = targetDatabase.GetDataProviders().First();
 
                             Response.Write("<ul>");
                             Response.Flush();
@@ -53,7 +55,7 @@
                 }
             }
 
-            public void TransferRecursive(Item item, DataProviderWrapper provider)
+            public void TransferRecursive(Item item, DataProvider provider)
             {
                 Response.Write(string.Format("<li>Transferring {0}</li>", item.Paths.FullPath));
                 Response.Flush();
