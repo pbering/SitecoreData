@@ -10,9 +10,9 @@ interesting data replication benefits).
 
 ## News ##
 
-# Publishing to a mongo target database now works from a shell running on SQL master and core!
-# Transfer.aspx now transfers all versions.
-# The workflow workbox now works in a shell running on mongodb master and core.
+* Publishing to a mongo target database now works from a shell running on SQL master and core!
+* Transfer.aspx now transfers all versions.
+* The workflow workbox now works in a shell running on mongodb master and core.
 
 ## Performance ##
 
