@@ -40,16 +40,9 @@
                         using (new SecurityDisabler())
                         {
                             var item = sourceDatabase.GetRootItem();
-
                             var dataProvider = targetDatabase.GetDataProviders().First();
 
-                            Response.Write("<ul>");
-                            Response.Flush();
-
                             TransferRecursive(item, dataProvider);
-
-                            Response.Write("</ul>");
-                            Response.Flush();
                         }
                     }
                 }
@@ -57,7 +50,7 @@
 
             public void TransferRecursive(Item item, DataProvider provider)
             {
-                Response.Write(string.Format("<li>Transferring {0}</li>", item.Paths.FullPath));
+                Response.Write(string.Format("Transferring {0}<br />", item.Paths.FullPath));
                 Response.Flush();
 
                 ItemDefinition parentDefinition = null;
@@ -78,12 +71,16 @@
 
                             if (itemInLanguage != null)
                             {
-                                // Add a version
                                 var itemDefinition = provider.GetItemDefinition(itemInLanguage.ID, null);
 
-                                // TODO: Add all version and not just v1
-                                provider.AddVersion(itemDefinition, new VersionUri(language, Sitecore.Data.Version.First), null);
-
+                                // Add all versions
+                                foreach(var languageVersion in itemInLanguage.Versions.GetVersions(true))
+                                {
+                                    Response.Write(string.Format("&nbsp;&nbsp;Adding version {0} on language: {1}<br />", languageVersion.Version.Number, languageVersion.Language.Name));
+             
+                                    provider.AddVersion(itemDefinition, new VersionUri(language, languageVersion.Version), null);
+                                }
+                               
                                 // Send the field values to the provider
                                 var changes = new ItemChanges(itemInLanguage);
 
@@ -108,7 +105,6 @@
                     TransferRecursive(child, provider);
                 }
             }
-
 </script>
         <form runat="server">
             <p>
