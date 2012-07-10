@@ -74,7 +74,7 @@ namespace SitecoreData.DataProviders
                 {
                     return _prefetchCache;
                 }
-
+                
                 lock (_prefetchCacheLock)
                 {
                     if (_prefetchCache != null)
