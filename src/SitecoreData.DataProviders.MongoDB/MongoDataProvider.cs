@@ -12,25 +12,16 @@ namespace SitecoreData.DataProviders.MongoDB
     {
         public MongoDataProvider(string connectionString) : base(connectionString)
         {
-            SafeMode = SafeMode.True;
-
             var databaseName = MongoUrl.Create(connectionString).DatabaseName;
+            var server = MongoServer.Create(connectionString);
+            var database = server.GetDatabase(databaseName);
 
-            Server = MongoServer.Create(connectionString);
-            Db = Server.GetDatabase(databaseName);
-
-            Items = Db.GetCollection<ItemDto>("items", SafeMode);
+            Items = database.GetCollection<ItemDto>("items");
             Items.EnsureIndex(IndexKeys.Ascending(new[] {"ParentId"}));
             Items.EnsureIndex(IndexKeys.Ascending(new[] {"TemplateId"}));
         }
 
-        private MongoServer Server { get; set; }
-
-        private MongoDatabase Db { get; set; }
-
         private MongoCollection<ItemDto> Items { get; set; }
-
-        private SafeMode SafeMode { get; set; }
 
         public void Dispose()
         {
@@ -60,14 +51,14 @@ namespace SitecoreData.DataProviders.MongoDB
 
         public bool DeleteItem(Guid id)
         {
-            var result = Items.Remove(Query.EQ("_id", id), RemoveFlags.Single, SafeMode);
+            var result = Items.Remove(Query.EQ("_id", id), RemoveFlags.Single);
 
             return result != null && result.Ok;
         }
 
         public void Store(ItemDto item)
         {
-            Items.Save(item, SafeMode);
+            Items.Save(item);
         }
 
         public override IEnumerable<ItemDto> GetItemsInWorkflowState(Guid workflowStateId)
