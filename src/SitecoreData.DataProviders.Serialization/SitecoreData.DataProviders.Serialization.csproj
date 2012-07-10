@@ -69,9 +69,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SerializedDatabase.cs" />
     <Compile Include="SerializationDataProvider.cs" />
+    <Compile Include="SerializedDatabase.cs" />
+    <Compile Include="_old_SerializationDataProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SitecoreData.DataProviders\SitecoreData.DataProviders.csproj">
+      <Project>{15F52B3B-2989-41F6-B6CB-4A04693585FA}</Project>
+      <Name>SitecoreData.DataProviders</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -8,23 +8,19 @@ using Sitecore.Data;
 
 namespace SitecoreData.DataProviders.MongoDB
 {
-    public class MongoDataProvider : DataProviderBase, IWritableDataProvider, IDisposable
+    public class MongoDataProvider : DataProviderBase, IWritableDataProvider
     {
+        private readonly MongoCollection<ItemDto> _items;
+
         public MongoDataProvider(string connectionString) : base(connectionString)
         {
             var databaseName = MongoUrl.Create(connectionString).DatabaseName;
             var server = MongoServer.Create(connectionString);
             var database = server.GetDatabase(databaseName);
 
-            Items = database.GetCollection<ItemDto>("items");
-            Items.EnsureIndex(IndexKeys.Ascending(new[] {"ParentId"}));
-            Items.EnsureIndex(IndexKeys.Ascending(new[] {"TemplateId"}));
-        }
-
-        private MongoCollection<ItemDto> Items { get; set; }
-
-        public void Dispose()
-        {
+            _items = database.GetCollection<ItemDto>("items");
+            _items.EnsureIndex(IndexKeys.Ascending(new[] {"ParentId"}));
+            _items.EnsureIndex(IndexKeys.Ascending(new[] {"TemplateId"}));
         }
 
         public bool CreateItem(Guid id, string name, Guid templateId, Guid parentId)
@@ -51,26 +47,26 @@ namespace SitecoreData.DataProviders.MongoDB
 
         public bool DeleteItem(Guid id)
         {
-            var result = Items.Remove(Query.EQ("_id", id), RemoveFlags.Single);
+            var result = _items.Remove(Query.EQ("_id", id), RemoveFlags.Single);
 
             return result != null && result.Ok;
         }
 
         public void Store(ItemDto item)
         {
-            Items.Save(item);
+            _items.Save(item);
         }
 
         public override IEnumerable<ItemDto> GetItemsInWorkflowState(Guid workflowStateId)
         {
             var query = Query.EQ("WorkflowStateId", workflowStateId);
 
-            return Items.Find(query);
+            return _items.Find(query);
         }
 
         public override ItemDto GetItem(Guid id)
         {
-            return Items.FindOneByIdAs<ItemDto>(id);
+            return _items.FindOneByIdAs<ItemDto>(id);
         }
 
         public override IEnumerable<Guid> GetChildIds(Guid parentId)
@@ -80,12 +76,12 @@ namespace SitecoreData.DataProviders.MongoDB
                                      ? Guid.Empty
                                      : parentId);
 
-            return Items.FindAs<ItemDto>(query).Select(it => it.Id).ToArray();
+            return _items.FindAs<ItemDto>(query).Select(it => it.Id).ToArray();
         }
 
         public override Guid GetParentId(Guid id)
         {
-            var result = Items.FindOneByIdAs<ItemDto>(id);
+            var result = _items.FindOneByIdAs<ItemDto>(id);
 
             return result != null ? (result.ParentId != Guid.Empty ? result.ParentId : ID.Null.ToGuid()) : Guid.Empty;
         }
@@ -95,7 +91,7 @@ namespace SitecoreData.DataProviders.MongoDB
             var query = Query.EQ("TemplateId", TemplateIDs.Template.ToGuid());
             var ids = new List<Guid>();
 
-            foreach (var id in Items.FindAs<ItemDto>(query).Select(it => it.Id))
+            foreach (var id in _items.FindAs<ItemDto>(query).Select(it => it.Id))
             {
                 ids.Add(id);
             }

@@ -7,7 +7,6 @@ namespace SitecoreData.DataProviders.RavenDB
 {
     public class RavenDataProvider : DataProviderBase, IWritableDataProvider, IDisposable
     {
-        private readonly TimeSpan _aggressiveCacheFor;
         private readonly DocumentStore _store;
 
         public RavenDataProvider(string connectionString) : base(connectionString)
@@ -15,8 +14,6 @@ namespace SitecoreData.DataProviders.RavenDB
             _store = new DocumentStore();
             _store.ParseConnectionString(connectionString);
             _store.Initialize();
-
-            _aggressiveCacheFor = TimeSpan.FromSeconds(60);
         }
 
         public void Dispose()
@@ -70,11 +67,8 @@ namespace SitecoreData.DataProviders.RavenDB
         {
             using (var session = _store.OpenSession())
             {
-                //using (session.Advanced.DocumentStore.DisableAggressiveCaching())
-                {
-                    session.Store(item);
-                    session.SaveChanges();
-                }
+                session.Store(item);
+                session.SaveChanges();
             }
         }
 
@@ -82,13 +76,10 @@ namespace SitecoreData.DataProviders.RavenDB
         {
             using (var session = _store.OpenSession())
             {
-                //using (session.Advanced.DocumentStore.AggressivelyCacheFor(_aggressiveCacheFor))
-                {
-                    // TODO: Implement static index
-                    var item = session.Load<ItemDto>(id);
+                // TODO: Implement static index
+                var item = session.Load<ItemDto>(id);
 
-                    return item;
-                }
+                return item;
             }
         }
 
@@ -102,15 +93,12 @@ namespace SitecoreData.DataProviders.RavenDB
             // TODO: Max results sets: http://ravendb.net/docs/client-api/basic-operations/understanding-session-object
             using (var session = _store.OpenSession())
             {
-                //using (session.Advanced.DocumentStore.AggressivelyCacheFor(_aggressiveCacheFor))
-                {
-                    // TODO: Implement static index
-                    var items = (from dto in session.Query<ItemDto>()
-                                 where dto.ParentId == itemId
-                                 select dto);
+                // TODO: Implement static index
+                var items = (from dto in session.Query<ItemDto>()
+                             where dto.ParentId == itemId
+                             select dto);
 
-                    return items.ToArray();
-                }
+                return items.ToArray();
             }
         }
 
@@ -119,15 +107,12 @@ namespace SitecoreData.DataProviders.RavenDB
             // TODO: Max results sets: http://ravendb.net/docs/client-api/basic-operations/understanding-session-object
             using (var session = _store.OpenSession())
             {
-                //using (session.Advanced.DocumentStore.AggressivelyCacheFor(_aggressiveCacheFor))
-                {
-                    // TODO: Implement static index
-                    var items = (from dto in session.Query<ItemDto>()
-                                 where dto.TemplateId == templateId
-                                 select dto);
+                // TODO: Implement static index
+                var items = (from dto in session.Query<ItemDto>()
+                             where dto.TemplateId == templateId
+                             select dto);
 
-                    return items.ToArray();
-                }
+                return items.ToArray();
             }
         }
 
@@ -138,10 +123,7 @@ namespace SitecoreData.DataProviders.RavenDB
 
             if (item != null)
             {
-                //using (_store.AggressivelyCacheFor(_aggressiveCacheFor))
-                {
-                    return item.ParentId;
-                }
+                return item.ParentId;
             }
 
             return Guid.Empty;
@@ -152,21 +134,18 @@ namespace SitecoreData.DataProviders.RavenDB
             // TODO: Max results sets: http://ravendb.net/docs/client-api/basic-operations/understanding-session-object
             using (var session = _store.OpenSession())
             {
-                //using (session.Advanced.DocumentStore.AggressivelyCacheFor(_aggressiveCacheFor))
-                {
-                    // TODO: Implement static index
-                    var items = (from dto in session.Query<ItemDto>()
-                                 where dto.TemplateId == templateId
-                                 select dto);
+                // TODO: Implement static index
+                var items = (from dto in session.Query<ItemDto>()
+                             where dto.TemplateId == templateId
+                             select dto);
 
-                    return items.ToArray().Select(item => item.Id).ToArray();
-                }
+                return items.ToArray().Select(item => item.Id).ToArray();
             }
         }
 
         public override IEnumerable<ItemDto> GetItemsInWorkflowState(Guid workflowStateId)
         {
-            return new ItemDto[] { };
+            return new ItemDto[] {};
         }
     }
 }

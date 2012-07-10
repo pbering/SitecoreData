@@ -136,7 +136,7 @@ namespace SitecoreData.DataProviders.Serialization
 
             if (item != null)
             {
-                var children = GetChildren(item.ID);
+                var children = GetChildren(item.ID).ToList();
 
                 items.AddRange(children);
 
