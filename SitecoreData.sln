@@ -29,6 +29,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{3946C2C0-4A2
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SitecoreData.DataProviders.RavenDB.Tests", "tst\SitecoreData.DataProviders.RavenDB.Tests\SitecoreData.DataProviders.RavenDB.Tests.csproj", "{45018039-902E-4866-9A73-A7FA5B86ACF3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SitecoreData.DataProviders.Tests", "tst\SitecoreData.DataProviders.Tests\SitecoreData.DataProviders.Tests.csproj", "{16971B37-6580-4D13-A173-47D1365EC8A8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tst", "tst", "{1B8BDEF4-7B05-4EA8-89BD-EF6B5A258F33}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug with Publish|Any CPU = Debug with Publish|Any CPU
@@ -72,8 +76,18 @@ Global
 		{45018039-902E-4866-9A73-A7FA5B86ACF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45018039-902E-4866-9A73-A7FA5B86ACF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45018039-902E-4866-9A73-A7FA5B86ACF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16971B37-6580-4D13-A173-47D1365EC8A8}.Debug with Publish|Any CPU.ActiveCfg = Debug|Any CPU
+		{16971B37-6580-4D13-A173-47D1365EC8A8}.Debug with Publish|Any CPU.Build.0 = Debug|Any CPU
+		{16971B37-6580-4D13-A173-47D1365EC8A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16971B37-6580-4D13-A173-47D1365EC8A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16971B37-6580-4D13-A173-47D1365EC8A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16971B37-6580-4D13-A173-47D1365EC8A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{45018039-902E-4866-9A73-A7FA5B86ACF3} = {1B8BDEF4-7B05-4EA8-89BD-EF6B5A258F33}
+		{16971B37-6580-4D13-A173-47D1365EC8A8} = {1B8BDEF4-7B05-4EA8-89BD-EF6B5A258F33}
 	EndGlobalSection
 EndGlobal
